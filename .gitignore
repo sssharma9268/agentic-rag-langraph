@@ -1,0 +1,12 @@
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+.vscode/
+.env
+poetry.lock
+vector_store/
+.pytest_cache/

@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = "Agentic RAG application using Langchain, Langraph, and Model Context Protocol"
+authors = ["Sumit"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+langsmith = "^0.3.42"
+chromadb = "^1.0.8"
+faiss-cpu = "^1.11.0"
+pypdf = "^5.5.0"
+python-docx = "^1.1.2"
+openpyxl = "^3.1.5"
+beautifulsoup4 = "^4.13.4"
+fastapi = "0.115.9"
+uvicorn = "^0.34.2"
+pydantic = "^2.6.3"
+python-multipart = "^0.0.9"
+pytesseract = "^0.3.10"
+pandas = "^2.2.1"
+numpy = "^2.2.5"
+aiofiles = "^23.2.1"
+langchain = "^0.3.25"
+langchain-core = "^0.3.59"
+onnxruntime = "1.21.1"
+langchain-openai = "^0.3.16"
+langgraph = "^0.4.3"
+sentence-transformers = "^4.1.0"
+langchain-community = "^0.3.24"
+pdfminer.six = "^20231228"
+unstructured = {extras = ["all-docs"], version = "^0.12.5"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.2"
+pytest-cov = "^4.1.0"
+pytest-asyncio = "^0.23.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api" 
