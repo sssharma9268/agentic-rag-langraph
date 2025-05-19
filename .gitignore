@@ -7,6 +7,5 @@ __pycache__
 *.pyz
 .vscode/
 .env
-poetry.lock
 vector_store/
 .pytest_cache/

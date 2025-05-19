@@ -6,10 +6,9 @@ from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.llms import HuggingFaceHub
-from langchain.chains import LLMChain
+from langchain_huggingface import HuggingFaceEmbeddings, HuggingFaceEndpoint
 from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough
 from app.settings import settings
 
 class DocumentProcessor:
@@ -92,11 +91,11 @@ class RAGPipeline:
                 openai_api_key=settings.OPENAI_API_KEY
             )
         elif llm_provider == "huggingface" and settings.HUGGINGFACE_API_KEY:
-            self.llm = HuggingFaceHub(
+            self.llm = HuggingFaceEndpoint(
                 repo_id="google/flan-t5-xxl",  # You can change this to other models
                 huggingfacehub_api_token=settings.HUGGINGFACE_API_KEY,
+                temperature=0.7,
                 model_kwargs={
-                    "temperature": 0.7,
                     "max_length": 512
                 }
             )
@@ -116,10 +115,11 @@ class RAGPipeline:
             input_variables=["context", "question"]
         )
         
-        # Create LLM chain
-        self.llm_chain = LLMChain(
-            llm=self.llm,
-            prompt=self.prompt_template
+        # Create chain using RunnablePassthrough
+        self.chain = (
+            {"context": RunnablePassthrough(), "question": RunnablePassthrough()}
+            | self.prompt_template
+            | self.llm
         )
     
     def ingest_documents(self, source: str, is_url=True):
@@ -149,13 +149,13 @@ class RAGPipeline:
             
         context_text = "\n\n".join([doc.page_content for doc in context])
         
-        # Use LLMChain for response generation
-        response = await self.llm_chain.ainvoke({
+        # Use the new chain for response generation
+        response = await self.chain.ainvoke({
             "context": context_text,
             "question": query
         })
         
-        return response["text"]
+        return response.content
 
 # Example usage
 if __name__ == "__main__":
